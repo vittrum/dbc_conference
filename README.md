@@ -1,1 +1,1 @@
-# conference_db
+# Database for scientific conference
