@@ -6,7 +6,7 @@ from django.db import models
 
 
 class UserManager(BaseUserManager):
-    def create_user(self, email, name, lastname, phone, password=None):
+    def create_user(self, email, name, lastname, password=None):
         if not email:
             raise ValueError('Email required!')
         if not name or not lastname:
@@ -35,7 +35,7 @@ class UserManager(BaseUserManager):
 
 
 class User(AbstractBaseUser, PermissionsMixin):
-    phone = models.CharField(max_length=12, unique=True)
+    email = models.CharField(max_length=256, unique=True)
     name = models.CharField(max_length=20)
     lastname = models.CharField(max_length=30)
     status = models.CharField(max_length=20)
@@ -47,7 +47,33 @@ class User(AbstractBaseUser, PermissionsMixin):
     objects = UserManager()
 
     def __str__(self):
-        return self.phone
+        return self.name + ' ' + self.lastname
 
     class Meta:
         db_table = "users"
+
+
+class ThirdParty(models.Model):
+    name = models.CharField(max_length=100)
+    info = models.CharField(max_length=256)
+    type = models.CharField(max_length=50, default='sponsor')
+    user_id = models.ForeignKey(User, on_delete=models.CASCADE)
+
+    class Meta:
+        db_table = 'third_party'
+
+    def __str__(self):
+        return self.name
+
+
+class BusinessCard(models.Model):
+    info = models.CharField(max_length=300)
+    need_to_print = models.BooleanField(default=True)
+    quantity = models.IntegerField(default=100)
+    user_id = models.ForeignKey(User, on_delete=models.CASCADE)
+
+    class Meta:
+        db_table = 'business_card'
+
+    def __str__(self):
+        return self.user_id.name + ' ' + self.user_id.name
