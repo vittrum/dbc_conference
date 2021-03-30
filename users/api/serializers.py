@@ -2,22 +2,21 @@ from django.contrib.auth.models import update_last_login
 from rest_framework import serializers
 from rest_framework_jwt.settings import api_settings
 
-from users.models import User
+from dbc_conference.users.models import User
 
 JWT_PAYLOAD_HANDLER = api_settings.JWT_PAYLOAD_HANDLER
 JWT_ENCODE_HANDLER = api_settings.JWT_ENCODE_HANDLER
 
 
-
 class UserLoginSerializer(serializers.Serializer):
-    phone = serializers.CharField(max_length=255)
+    email = serializers.CharField(max_length=255)
     password = serializers.CharField(max_length=128, write_only=True)
     token = serializers.CharField(max_length=255, read_only=True)
 
     def validate(self, data):
-        phone = data.get("phone", None)
+        email = data.get("email", None)
         password = data.get("password", None)
-        user = User.objects.get(phone=phone)
+        user = User.objects.get(email=email)
 
         if user is None or user.password != password:
             raise serializers.ValidationError(
@@ -29,10 +28,10 @@ class UserLoginSerializer(serializers.Serializer):
             update_last_login(None, user)
         except User.DoesNotExist:
             raise serializers.ValidationError(
-                'User with given phone and password does not exists'
+                'User with given email and password does not exists'
             )
         return {
-            'phone': user.phone,
+            'email': user.email,
             'token': jwt_token
         }
 
@@ -52,7 +51,7 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = [
-            'phone',
+            'email',
             'password',
             'name',
             'lastname',

@@ -16,6 +16,21 @@ from pathlib import Path
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
+# LOGIN AND AUTHENTICATION
+
+DB_LOGIN = 'bla_obs'
+DB_PASS = '1'
+
+def change_root(status):
+    if status == 'admin':
+        return 'admin', '1'
+    elif status == 'user':
+        return 'user', '1'
+    else:
+        return 'observer', '1'
+
+
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
@@ -39,7 +54,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     # Tech
-
+    'rest_framework',
+    #'django-filters',
     # Local
     'conference',
     'thesis',
