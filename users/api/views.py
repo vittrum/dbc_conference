@@ -5,8 +5,9 @@ from rest_framework.response import Response
 from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 
 from dbc_conference.dbc_conference import settings
-from dbc_conference.users.api.serializers import UserRegistrationSerializer, UserLoginSerializer
-from dbc_conference.users.models import User
+from dbc_conference.users.api.serializers import \
+    UserRegistrationSerializer, UserLoginSerializer, ThirdPartySerializer, BusinessCardSerializer
+from dbc_conference.users.models import User, ThirdParty, BusinessCard
 
 
 class UserRegistrationView(CreateAPIView):
@@ -42,3 +43,44 @@ class UserLoginView(ListAPIView):
 
     def get_queryset(self):
         return
+
+
+class CreateBusinessCardView(views.APIView):
+    def post(self, request):
+        user = self.request.user
+        data = request.data
+        data['user'] = user
+        serializer = BusinessCardSerializer(data=data)
+        if serializer.is_valid(raise_exception=True):
+            serializer.save()
+            return Response(status=status.HTTP_201_CREATED)
+        return Response(status=status.HTTP_400_BAD_REQUEST)
+
+
+class UserBusinessCardView(views.APIView):
+    def get(self, request, pk):
+        business_card = BusinessCard.objects.get_object_or_none(user__id=pk)
+        serializer = BusinessCardSerializer(data=business_card)
+        if business_card is None:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+        # some shit here
+        if serializer.is_valid(raise_exception=True):
+            return Response(data=serializer.data)
+        return Response(status=status.HTTP_400_BAD_REQUEST)
+
+
+class CreateThirdPartyView(views.APIView):
+    def post(self, request):
+        user = self.request.user
+        data = request.data
+        data['user'] = user
+        serializer = ThirdPartySerializer(data=data)
+        if serializer.is_valid(raise_exception=True):
+            serializer.save()
+            return Response(status=status.HTTP_201_CREATED)
+        return Response(status=status.HTTP_400_BAD_REQUEST)
+
+
+class ThirdPartyListView(generics.ListAPIView):
+    serializer_class = ThirdPartySerializer
+    queryset = ThirdParty.objects.all()

@@ -2,7 +2,7 @@ from django.contrib.auth.models import update_last_login
 from rest_framework import serializers
 from rest_framework_jwt.settings import api_settings
 
-from dbc_conference.users.models import User
+from dbc_conference.users.models import User, ThirdParty, BusinessCard
 
 JWT_PAYLOAD_HANDLER = api_settings.JWT_PAYLOAD_HANDLER
 JWT_ENCODE_HANDLER = api_settings.JWT_ENCODE_HANDLER
@@ -62,3 +62,24 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
                 'write_only': True
             }
         }
+
+
+class UserPublicSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = [
+            'name',
+            'lastname'
+        ]
+
+
+class BusinessCardSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = BusinessCard
+        fields = '__all__'
+
+
+class ThirdPartySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ThirdParty
+        fields = '__all__'

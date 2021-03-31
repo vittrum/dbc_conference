@@ -57,7 +57,7 @@ class ThirdParty(models.Model):
     name = models.CharField(max_length=100)
     info = models.CharField(max_length=256)
     type = models.CharField(max_length=50, default='sponsor')
-    user_id = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
 
     class Meta:
         db_table = 'third_parties'
@@ -70,10 +70,10 @@ class BusinessCard(models.Model):
     info = models.CharField(max_length=300)
     need_to_print = models.BooleanField(default=True)
     quantity = models.IntegerField(default=100)
-    user_id = models.OneToOneField(User, on_delete=models.CASCADE)
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
 
     class Meta:
         db_table = 'business_cards'
 
     def __str__(self):
-        return self.user_id.name + ' ' + self.user_id.name
+        return self.user.name + ' ' + self.user.name
