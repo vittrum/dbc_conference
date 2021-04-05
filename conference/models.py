@@ -1,8 +1,8 @@
 from django.db import models
 
 # Create your models here.
-from dbc_conference.thesis.models import Thesis
-from dbc_conference.users.models import User
+from thesis.models import Thesis
+from users.models import User
 
 
 class Conference(models.Model):

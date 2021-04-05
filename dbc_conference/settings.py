@@ -18,17 +18,18 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # LOGIN AND AUTHENTICATION
 
-DB_LOGIN = 'bla_obs'
+DB_LOGIN = 'cadmin'
 DB_PASS = '1'
 
 def change_root(status):
-    if status == 'admin':
+    if status == 'cadmin':
         return 'admin', '1'
     elif status == 'user':
         return 'user', '1'
     else:
         return 'observer', '1'
 
+AUTH_USER_MODEL = 'users.User'
 
 
 # Quick-start development settings - unsuitable for production
@@ -99,8 +100,12 @@ WSGI_APPLICATION = 'dbc_conference.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'cdb',
+        'USER': DB_LOGIN,
+        'PASSWORD': DB_PASS,
+        'HOST': 'localhost',
+        'PORT': '5432',
     }
 }
 
