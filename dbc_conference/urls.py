@@ -21,8 +21,8 @@ from users.api import views
 urlpatterns = [
     path('login/', views.UserLoginView.as_view()),
     path('register/', views.UserRegistrationView.as_view()),
-    path('users', include('users.api.urls')),
-    path('thesis', include('thesis.api.urls')),
-    path('conference', include('conference.api.urls')),
+    path('users/', include('users.api.urls')),
+    path('thesis/', include('thesis.api.urls')),
+    path('conference/', include('conference.api.urls')),
     path('admin/', admin.site.urls),
 ]

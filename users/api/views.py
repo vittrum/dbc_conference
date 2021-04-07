@@ -46,6 +46,8 @@ class UserLoginView(ListAPIView):
 
 
 class CreateBusinessCardView(views.APIView):
+    authentication_classes = [JSONWebTokenAuthentication, ]
+
     def post(self, request):
         user = self.request.user
         data = request.data
@@ -58,6 +60,8 @@ class CreateBusinessCardView(views.APIView):
 
 
 class UserBusinessCardView(views.APIView):
+    authentication_classes = [JSONWebTokenAuthentication, ]
+
     def get(self, request, pk):
         business_card = BusinessCard.objects.get_object_or_none(user__id=pk)
         serializer = BusinessCardSerializer(data=business_card)
@@ -70,6 +74,8 @@ class UserBusinessCardView(views.APIView):
 
 
 class CreateThirdPartyView(views.APIView):
+    authentication_classes = [JSONWebTokenAuthentication, ]
+
     def post(self, request):
         user = self.request.user
         data = request.data
@@ -82,5 +88,6 @@ class CreateThirdPartyView(views.APIView):
 
 
 class ThirdPartyListView(generics.ListAPIView):
+    authentication_classes = [JSONWebTokenAuthentication, ]
     serializer_class = ThirdPartySerializer
     queryset = ThirdParty.objects.all()
