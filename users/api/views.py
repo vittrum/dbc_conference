@@ -49,7 +49,7 @@ class CreateBusinessCardView(views.APIView):
     authentication_classes = [JSONWebTokenAuthentication, ]
 
     def post(self, request):
-        user = self.request.user
+        user = self.request.user.id
         data = request.data
         data['user'] = user
         serializer = BusinessCardSerializer(data=data)
@@ -60,17 +60,15 @@ class CreateBusinessCardView(views.APIView):
 
 
 class UserBusinessCardView(views.APIView):
-    authentication_classes = [JSONWebTokenAuthentication, ]
+    permission_classes = [AllowAny, ]
 
     def get(self, request, pk):
-        business_card = BusinessCard.objects.get_object_or_none(user__id=pk)
-        serializer = BusinessCardSerializer(data=business_card)
+        business_card = BusinessCard.objects.get(user__id=pk)
         if business_card is None:
             return Response(status=status.HTTP_404_NOT_FOUND)
-        # some shit here
-        if serializer.is_valid(raise_exception=True):
-            return Response(data=serializer.data)
-        return Response(status=status.HTTP_400_BAD_REQUEST)
+        serializer = BusinessCardSerializer(business_card, many=False)
+        return Response(data=serializer.data)
+        #return Response(status=status.HTTP_400_BAD_REQUEST)
 
 
 class CreateThirdPartyView(views.APIView):
@@ -88,6 +86,6 @@ class CreateThirdPartyView(views.APIView):
 
 
 class ThirdPartyListView(generics.ListAPIView):
-    authentication_classes = [JSONWebTokenAuthentication, ]
+    permission_classes = [AllowAny, ]
     serializer_class = ThirdPartySerializer
     queryset = ThirdParty.objects.all()

@@ -74,7 +74,7 @@ class UserPublicSerializer(serializers.ModelSerializer):
 
 
 class BusinessCardSerializer(serializers.ModelSerializer):
-    user = UserSerializer()
+    #user = UserSerializer()
     class Meta:
         model = BusinessCard
         fields = '__all__'
